@@ -1,5 +1,6 @@
 #ifndef LR1_PARSER_TEST_FUNCTIONS_H
 #define LR1_PARSER_TEST_FUNCTIONS_H
+
 #include <string>
 #include <vector>
 #include <list>

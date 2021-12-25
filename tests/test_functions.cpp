@@ -7,6 +7,7 @@ std::string list2str(const std::list<char>& list) {
         answer.push_back(*it);
     return answer;
 }
+
 std::string try_rule_sequence(const std::vector<std::pair<char, std::string>>& rules) {
     std::list<char> str;
     str.push_back('S');
@@ -18,7 +19,7 @@ std::string try_rule_sequence(const std::vector<std::pair<char, std::string>>& r
             break;
         ++pos;
         for (char c:rule.second) {
-            if(c == '~')
+            if (c == '~')
                 break;
             str.insert(pos, c);
             --pos;
