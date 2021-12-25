@@ -4,6 +4,7 @@
 #include <vector>
 #include <list>
 
+std::string list2str(const std::list<char>& list);
 
 std::string try_rule_sequence(const std::vector<std::pair<char, std::string>>& rules);
 

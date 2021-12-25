@@ -4,7 +4,7 @@
 #include <string>
 #include "test_functions.h"
 
-TEST(SimpleTests, test_from_neerc) {
+TEST(AllTests, test_from_neerc) {
     Grammar g({'S', 'C'}, {'c', 'd'}, {{'S', "CC"},
                                        {'C', "cC"},
                                        {'C', "d"}});

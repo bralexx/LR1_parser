@@ -20,7 +20,7 @@ add_executable(
         tests/test_main.cpp
         tests/test_functions.cpp
         Grammar.cpp
-)
+        tests/test2.cpp)
 target_link_libraries(
         LR1_parser_tests
         gtest_main

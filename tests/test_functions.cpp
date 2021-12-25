@@ -1,5 +1,12 @@
 #include "test_functions.h"
+#include <algorithm>
 
+std::string list2str(const std::list<char>& list) {
+    std::string answer;
+    for (auto it = list.begin(); it != list.end(); ++it)
+        answer.push_back(*it);
+    return answer;
+}
 std::string try_rule_sequence(const std::vector<std::pair<char, std::string>>& rules) {
     std::list<char> str;
     str.push_back('S');
@@ -11,6 +18,8 @@ std::string try_rule_sequence(const std::vector<std::pair<char, std::string>>& r
             break;
         ++pos;
         for (char c:rule.second) {
+            if(c == '~')
+                break;
             str.insert(pos, c);
             --pos;
         }
@@ -18,8 +27,6 @@ std::string try_rule_sequence(const std::vector<std::pair<char, std::string>>& r
         --pos_copy;
         str.erase(pos_copy);
     }
-    std::string answer;
-    for (auto it = str.rbegin(); it != str.rend(); ++it)
-        answer.push_back(*it);
-    return answer;
+    std::reverse(str.begin(), str.end());
+    return list2str(str);
 }

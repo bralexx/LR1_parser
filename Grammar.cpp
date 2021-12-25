@@ -19,8 +19,9 @@ Grammar::Grammar(const std::vector<char>& notTerms, const std::vector<char>& ter
     rules_src = rulesInput;
     for (int rule = 0; rule < rulesInput.size(); ++rule) {
         std::vector<int> right;
-        for (auto j:rulesInput[rule].second)
-            right.push_back(char2SymbolTable[j]);
+        for (auto c:rulesInput[rule].second)
+            if(c != EPS)
+                right.push_back(char2SymbolTable[c]);
         rules[char2SymbolTable[rulesInput[rule].first]].push_back(
                 {char2SymbolTable[rulesInput[rule].first], right, rule});
     }
@@ -44,6 +45,10 @@ void Grammar::LR_parser::init_first_len1() {
         changed = false;
         for (auto& gr_rules:grammar.rules)
             for (auto& rule:gr_rules) {
+                if(rule.right.empty()) {
+                    first_len1[rule.left].insert(EPS_INDEX);
+                    continue;
+                }
                 int prev_set_size = first_len1[rule.left].size();
                 int right_part_symbol = 0;
                 do {

@@ -8,7 +8,7 @@
 #include <map>
 
 #define SPECIAL_CHAR_NUM 2
-#define EPS '$'
+#define EPS '~'
 #define EPS_INDEX 1
 #define START_SYMBOL_INDEX 0
 #define START_RULE_INDEX_FIRST 0
