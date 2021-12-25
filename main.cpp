@@ -15,8 +15,14 @@ int main() {
 
     Grammar g(notTerms, terms, rules);
 
-    std::string w;
-    std::cin >> w;
-    std::cout << (g.LR_check(w) ? "true" : "false") << std::endl;
+    std::cin >> n;
+    for(int i = 0; i < n; ++i) {
+        std::string w;
+        std::cin >> w;
+        auto rules = g.LR_check(w);
+        for(auto& i:rules)
+            std::cout << i.first << " -> " << i.second << "; ";
+        std::cout << "\n";
+    }
     return 0;
 }

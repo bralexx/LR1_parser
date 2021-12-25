@@ -5,11 +5,13 @@
 #ifndef LR1_PARSER_GRAMMAR_H
 #define LR1_PARSER_GRAMMAR_H
 
+#include <algorithm>
 #include <unordered_map>
 #include <vector>
 #include <set>
 #include <map>
 
+#define SPECIAL_CHAR_NUM 2
 #define EPS '$'
 #define EPS_INDEX 1
 #define START_SYMBOL_INDEX 0
@@ -26,8 +28,10 @@ class Grammar {
     struct Rule {
         int left;
         std::vector<int> right;
+        int src_pos;
     };
     std::vector<std::vector<Rule>> rules;
+    std::vector<std::pair<char, std::string>> rules_src;
 
     struct LR_parser {
         bool built = false;
@@ -63,14 +67,14 @@ class Grammar {
         };
         struct Cell {
             Type type= Error;
-            int arg1, arg2;
+            int arg1 = -1, arg2 = -1;
         };
         std::vector<std::vector<Cell>> canonicalTable;
 
         void setLR1CanonicalTable();
 
         LR_parser() = delete;
-        LR_parser(const Grammar& grammar_);
+        explicit LR_parser(const Grammar& grammar_);
         void build_parser();
     };
     LR_parser lr_parser;
@@ -78,7 +82,7 @@ public:
     Grammar(const std::vector<char>& notTerms, const std::vector<char>& terms,
             const std::vector<std::pair<char, std::string>>& rules);
 
-    bool LR_check(const std::string& str);
+    std::vector<std::pair<char, std::string>> LR_check(const std::string& str);
 };
 
 
