@@ -159,14 +159,24 @@ void Grammar::LR_parser::setLR1CanonicalTable() {
                 && item.rule.second == START_RULE_INDEX_SECOND
                 && item.symbol == EPS_INDEX
                 && item.dotPos == grammar.rules[item.rule.first][item.rule.second].right.size()) {
+                if (canonicalTable[cur_row][EPS_INDEX].type != Error
+                    && canonicalTable[cur_row][EPS_INDEX].type != Accept)
+                    throw std::runtime_error("Not LR(1)!");
                 canonicalTable[cur_row][EPS_INDEX] = {Accept, -1, -1};
             } else if (item.dotPos == grammar.rules[item.rule.first][item.rule.second].right.size()) {
-                canonicalTable[cur_row][item.symbol] = {Reduce, item.rule.first, item.rule.second};
+                Cell new_cell({Reduce, item.rule.first, item.rule.second});
+                if (canonicalTable[cur_row][item.symbol].type != Error
+                    && canonicalTable[cur_row][item.symbol] != new_cell)
+                    throw std::runtime_error("Not LR(1)!");
+                canonicalTable[cur_row][item.symbol] = new_cell;
             } else {
                 int symbol_after_dot = grammar.rules[item.rule.first][item.rule.second].right[item.dotPos];
                 if (grammar.symbols[symbol_after_dot].term) {
-                    canonicalTable[cur_row][symbol_after_dot] =
-                            {Shift, automaton[I_set.second].edge[symbol_after_dot], -1};
+                    Cell new_cell({Shift, automaton[I_set.second].edge[symbol_after_dot], -1});
+                    if (canonicalTable[cur_row][symbol_after_dot].type != Error
+                        && canonicalTable[cur_row][symbol_after_dot] != new_cell)
+                        throw std::runtime_error("Not LR(1)!");
+                    canonicalTable[cur_row][symbol_after_dot] = new_cell;
                 }
             }
         }
@@ -210,7 +220,7 @@ std::vector<std::pair<char, std::string>> Grammar::LR_check(const std::string& s
             stack.push_back(rule.left);
             stack.push_back(lr_parser.automaton[stack[stack.size() - 2]].edge[rule.left]);
         } else if (cell.type == LR_parser::Accept) {
-            std::reverse(rules_seq.begin(),rules_seq.end());
+            std::reverse(rules_seq.begin(), rules_seq.end());
             return rules_seq;
         } else if (cell.type == LR_parser::Error) {
             return {};
@@ -219,3 +229,6 @@ std::vector<std::pair<char, std::string>> Grammar::LR_check(const std::string& s
     return {};
 }
 
+bool Grammar::LR_parser::Cell::operator!=(const Grammar::LR_parser::Cell& other) {
+    return type != other.type || arg1 != other.arg1 || arg2 != other.arg2;
+}
